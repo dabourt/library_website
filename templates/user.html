@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}User Profile{% endblock %}
+{% block content %}
+<h1>User Profile</h1>
+<p>Username: {{ username }}</p>
+<h2>Borrowed Books</h2>
+{% if borrowed_books %}
+<ul>
+    {% for book in borrowed_books %}
+    <li>
+        {{ book }}
+        <form method="POST" action="{{ url_for('return_book', title=book) }}" style="display:inline;">
+            <button type="submit">Return</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You have not borrowed any books.</p>
+{% endif %}
+{% endblock %}

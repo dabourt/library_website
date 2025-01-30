@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Books{% endblock %}
+{% block content %}
+<h2>Available Books</h2>
+<table style="margin: 14px; text-align: center;">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Status</th>
+            {% if session.get('is_admin') %}
+            <th>Borrowed By</th>
+            {% endif %}
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>
+                {% if book.available %}
+                    <span class="available">Available</span>
+                {% else %}
+                    <span class="checked-out">Checked Out</span>
+                {% endif %}
+            </td>
+            {% if session.get('is_admin') %}
+            <td>
+                {% if book.available %}
+                    <span class="not_borrowed">Not borrowed</span>
+                {% else %}
+                    {% set borrowed_user = users | selectattr('borrowed_books', 'contains', book.title) | first %}
+                    {% if borrowed_user %}
+                        {{ borrowed_user.username }}
+                    {% else %}
+                        No user has borrowed this book.
+                    {% endif %}
+                {% endif %}
+            </td>
+            {% endif %}
+            <td>
+                {% if book.available %}
+                <form method="POST" action="{{ url_for('borrow_book', title=book.title) }}" style="display:inline-table;">
+                    <button type="submit">Borrow</button>
+                </form>
+                {% else %}
+                {% set user = users | selectattr('username', 'equalto', session['username']) | first %}
+                {% if user and 'borrowed_books' in user and book.title in user['borrowed_books'] %}
+                <form method="POST" action="{{ url_for('return_book', title=book.title) }}" style="display:inline-table;">
+                    <button type="submit">Return</button>
+                </form>
+                {% else %}
+                <span>Not Available</span>
+                {% endif %}
+                {% endif %}
+                {% if session.get('is_admin') %}
+                <form method="POST" action="{{ url_for('remove_book', title=book.title) }}" style="display:inline-table;">
+                    <button type="submit">Remove</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('home') }}" class="btn">Back to Home</a>
+{% endblock %}
