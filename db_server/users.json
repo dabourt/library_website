@@ -1,0 +1,35 @@
+[
+    {
+        "borrowed_books": [],
+        "password": "1559",
+        "username": "Tarek"
+    },
+    {
+        "password": "1223",
+        "username": "Ahmed"
+    },
+    {
+        "borrowed_books": [
+            "Lio"
+        ],
+        "is_admin": true,
+        "password": "admin123",
+        "username": "admin"
+    },
+    {
+        "borrowed_books": [],
+        "is_admin": false,
+        "password": "4545",
+        "username": "hany"
+    },
+    {
+        "is_admin": false,
+        "password": "12345",
+        "username": "lolo"
+    },
+    {
+        "borrowed_books": [],
+        "password": "1559",
+        "username": "ahmed"
+    }
+]

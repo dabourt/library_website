@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lib-db-deployment
+  namespace: library-site
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lib-db
+  template:
+    metadata:
+      labels:
+        app: lib-db
+    spec:
+      volumes:
+        - name: lib-db-storage
+          persistentVolumeClaim:
+            claimName: lib-db-pvc
+      containers:
+        - name: lib-db-container
+          image: daboortocker/library_website_db:v1.3
+          volumeMounts:
+            - name: lib-db-storage
+              mountPath: /var/lib_db
+          env:
+            - name: LIB_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: lib-db-secret
+                  key: username
+            - name: LIB_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lib-db-secret
+                  key: password
+

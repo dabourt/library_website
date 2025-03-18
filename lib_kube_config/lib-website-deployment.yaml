@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lib-web-deployment
+  namespace: library-site
+  labels:
+    app: lib-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lib-web
+  template:
+    metadata:
+      labels:
+        app: lib-web
+    spec:
+      containers:
+      - name: library-website-container
+        image: daboortocker/library_website:v1.31
+        ports:
+        - containerPort: 5000
+        env:
+          - name: LIB_DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: lib-db-secret
+                key: username
+          - name: LIB_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lib-db-secret
+                key: password
