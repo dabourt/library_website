@@ -10,6 +10,7 @@ IMAGE_NAME="daboortocker/library_website_db:$VERSION_TAG"
 docker build -t $IMAGE_NAME db_server
 
 # Push the Docker image to Docker Hub
-docker push $IMAGE_NAME
 
+docker push $IMAGE_NAME
+# Check if the push was successful
 echo "Docker image $IMAGE_NAME has been built and pushed to Docker Hub."
