@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Prompt for the version tag
+# Prompt for the version ta
 read -p "Enter the version tag for this build: " VERSION_TAG
 
 # Define the image name
