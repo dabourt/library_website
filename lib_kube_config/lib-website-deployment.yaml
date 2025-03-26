@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: library-website-container
-        image: daboortocker/library_website:v1.31
+        image: daboortocker/library_website:latest
         ports:
         - containerPort: 5000
         env:
