@@ -19,7 +19,7 @@ spec:
             claimName: lib-db-pvc
       containers:
         - name: lib-db-container
-          image: daboortocker/library_website_db:v1.3
+          image: daboortocker/library_website_db:latest
           volumeMounts:
             - name: lib-db-storage
               mountPath: /var/lib_db
