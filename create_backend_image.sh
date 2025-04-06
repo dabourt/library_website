@@ -3,7 +3,7 @@
 # Prompt for the version tag.
 read -p "Enter the version tag for this build: " VERSION_TAG
 
-# Define the image name
+# Define the image nam
 IMAGE_NAME="daboortocker/library_website:$VERSION_TAG"
 
 # Build the Docker image
