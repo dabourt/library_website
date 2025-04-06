@@ -13,4 +13,4 @@ docker build -t $IMAGE_NAME db_server
 
 docker push $IMAGE_NAME
 # Check if the push was successful
-echo "Docker image $IMAGE_NAME has been built and pushed to Docker Hub."
+echo "Docker image $IMAGE_NAME has been built and pushed to Docker Hub"
