@@ -16,6 +16,11 @@ try:
 
     AUTH_USERNAME = os.getenv("LIB_DB_USERNAME")
     AUTH_PASSWORD = os.getenv("LIB_DB_PASSWORD")
+
+    # Health endpoint (Monitoring)
+    @app.route("/health", methods=["GET"])
+    def health():
+        return {"status": "ok"}, 200
     
     # Custom test to check if a book is in the borrowed books list
     @app.template_test('contains')
