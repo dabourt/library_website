@@ -1,17 +1,29 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [ "main" ]
+
+env:
+  BACKEND_IMAGE: daboortocker/library_website
+  DB_IMAGE: daboortocker/library_website_db
+  TAG: latest
+  NAMESPACE: library-site
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
 
     steps:
+    # -------------------------
+    # Checkout
+    # -------------------------
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    # -------------------------
+    # Python & Unit Tests
+    # -------------------------
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -23,14 +35,56 @@ jobs:
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest
+        pip install -r requirements.txt pytest
         pytest tests/unit
 
+    # -------------------------
+    # Docker Login
+    # -------------------------
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # -------------------------
+    # Build Docker Images
+    # -------------------------
     - name: Build Backend Docker Image
       run: |
-        docker build -t library-backend:latest backend_server
+        docker build -t $BACKEND_IMAGE:$TAG backend_server
 
     - name: Build Database Docker Image
       run: |
-        docker build -t library-db:latest db_server
+        docker build -t $DB_IMAGE:$TAG db_server
+
+    # -------------------------
+    # Push Docker Images
+    # -------------------------
+    - name: Push Docker Images
+      run: |
+        docker push $BACKEND_IMAGE:$TAG
+        docker push $DB_IMAGE:$TAG
+
+    # -------------------------
+    # Create Kubernetes Cluster (Kind)
+    # -------------------------
+    - name: Create Kind Cluster
+      uses: helm/kind-action@v1.10.0
+      with:
+        cluster_name: github-k8s
+
+    # -------------------------
+    # Deploy to Kubernetes
+    # -------------------------
+    - name: Deploy Application to Kubernetes
+      run: |
+        kubectl create namespace $NAMESPACE || true
+        kubectl config set-context --current --namespace=$NAMESPACE
+
+        kubectl apply -f lib_kube_config/
+
+        kubectl rollout status deployment/lib-web-deployment
+        kubectl rollout status deployment/lib-db-deployment
+
+        kubectl get pods
