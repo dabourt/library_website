@@ -1,0 +1,36 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    - name: Run Unit Tests
+      run: |
+        cd backend_server
+        python -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest
+        pytest tests/unit
+
+    - name: Build Backend Docker Image
+      run: |
+        docker build -t library-backend:latest backend_server
+
+    - name: Build Database Docker Image
+      run: |
+        docker build -t library-db:latest db_server
