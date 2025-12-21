@@ -88,3 +88,26 @@ jobs:
         kubectl rollout status deployment/lib-db-deployment
 
         kubectl get pods
+
+    # -------------------------
+    # Install Helm
+    # -------------------------
+    - name: Install Helm
+      uses: azure/setup-helm@v4
+    # -------------------------
+    # Install Monitoring (Prometheus + Grafana)
+    # -------------------------
+    - name: Install Prometheus & Grafana
+      run: |
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+        helm repo update
+
+        kubectl create namespace monitoring || true
+
+        helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+          --namespace monitoring
+
+        kubectl rollout status deployment/monitoring-grafana -n monitoring
+        kubectl rollout status deployment/monitoring-kube-state-metrics -n monitoring
+
+        kubectl get pods -n monitoring
