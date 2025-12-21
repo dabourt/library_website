@@ -1,0 +1,184 @@
+# Library Website – DevOps CI/CD Project
+
+## 📌 Project Overview
+
+This project demonstrates a complete **DevOps CI/CD pipeline** for a Flask-based web application with a database backend, deployed on **Kubernetes (kind)** and fully automated using **GitHub Actions**.
+
+The goal of this project is to showcase real-world DevOps practices including:
+
+* CI/CD automation
+* Containerization with Docker
+* Kubernetes deployment
+* Monitoring with Prometheus & Grafana
+* Version control and rollback capability
+
+> ⚠️ Note: The infrastructure is deployed on **kind (Kubernetes in Docker)** to simulate a production-grade environment without relying on cloud providers.
+
+---
+
+## 🏗 Architecture
+
+```
+GitHub Actions (CI/CD)
+   |
+   |-- Unit Tests (Flask)
+   |-- Docker Build & Push
+   |-- Kubernetes Deployment (kind)
+   |-- Monitoring Stack
+
+Kubernetes (kind)
+   |
+   |-- Flask Backend Deployment
+   |-- Database Deployment
+   |-- Services & ConfigMaps
+   |-- Prometheus
+   |-- Grafana
+```
+
+---
+
+## ⚙️ Technology Stack
+
+* **Backend:** Flask (Python)
+* **Database:** Containerized DB service
+* **CI/CD:** GitHub Actions
+* **Containers:** Docker
+* **Orchestration:** Kubernetes (kind)
+* **Monitoring:** Prometheus & Grafana
+* **Version Control:** Git & GitHub
+
+---
+
+## 🔁 CI/CD Pipeline
+
+The CI/CD pipeline is triggered automatically on every push to the `main` branch.
+
+### Pipeline Stages:
+
+1. **Checkout Source Code**
+2. **Run Unit Tests** (Pytest)
+3. **Build Docker Images** (Backend & Database)
+4. **Push Images to Docker Hub**
+5. **Create Kubernetes Cluster (kind)**
+6. **Deploy Application to Kubernetes**
+7. **Deploy Monitoring Stack (Prometheus & Grafana)**
+
+All steps are fully automated using **GitHub Actions**.
+
+---
+
+## 🧪 Testing
+
+* Unit tests are written using **pytest**.
+* Tests are executed automatically in the CI pipeline before building Docker images.
+* This ensures code quality and prevents broken builds from being deployed.
+
+---
+
+## 🚀 Deployment
+
+Deployment is performed automatically to a **kind Kubernetes cluster** created during the pipeline run.
+
+Kubernetes manifests include:
+
+* Deployments
+* Services
+* Persistent Volumes
+* Secrets
+* Namespaces
+
+Rollouts are verified using:
+
+```bash
+kubectl rollout status
+```
+
+---
+
+## 📊 Monitoring
+
+### Monitoring Stack
+
+The project includes a full observability stack deployed on Kubernetes:
+
+* **Prometheus**: Collects metrics from Kubernetes components and application workloads
+* **Grafana**: Visualizes metrics using real-time dashboards
+
+### Access Grafana
+
+```bash
+kubectl get secret monitoring-grafana -n monitoring \
+  -o jsonpath="{.data.admin-password}" | base64 --decode
+```
+
+* **Username:** admin
+* **Password:** Retrieved from the command above
+
+---
+
+## 🔄 Versioning & Rollback
+
+* Docker images are versioned using tags
+* Kubernetes supports rolling updates
+* Rollbacks can be performed easily using:
+
+```bash
+kubectl rollout undo deployment <deployment-name>
+```
+
+Git version control ensures the ability to return to any previous stable version.
+
+---
+
+## ▶️ Run Locally
+
+```bash
+cd backend_server
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
+
+---
+
+## 📁 Repository Structure
+
+```
+backend_server/
+  ├── app.py
+  ├── requirements.txt
+  └── tests/
+
+db_server/
+  └── Dockerfile
+
+lib_kube_config/
+  └── Kubernetes manifests
+
+.github/workflows/
+  └── ci-cd.yml
+```
+
+---
+
+## ✅ Project Status
+
+✔ CI/CD implemented
+✔ Dockerized application
+✔ Kubernetes deployment
+✔ Monitoring enabled (Prometheus & Grafana)
+✔ Version control & rollback supported
+
+---
+
+## 👤 Author
+
+**Tarek Dabour**
+DevOps Engineer
+
+---
+
+## 📝 Final Notes
+
+This project is designed to demonstrate hands-on DevOps skills and real-world practices, focusing on automation, reliability, and observability in a Kubernetes environment.
